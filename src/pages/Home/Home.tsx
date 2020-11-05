@@ -9,7 +9,7 @@ import {
   makeStyles,
   Paper,
   Theme,
-  Toolbar,
+  Toolbar as AppToolbar,
   Typography,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
@@ -21,6 +21,12 @@ import {
   WeekView,
   MonthView,
   Appointments,
+  AppointmentForm,
+  AppointmentTooltip,
+  Toolbar,
+  ViewSwitcher,
+  TodayButton,
+  DateNavigator,
 } from "@devexpress/dx-react-scheduler-material-ui";
 
 import styles from "./Home.module.scss";
@@ -28,6 +34,7 @@ import { useAuth } from "../../shared/utils/hooks/auth";
 import { Redirect, useHistory } from "react-router-dom";
 import { BACKEND_URL } from "../../shared/utils/config";
 import { format } from "date-fns";
+import Header from "../../shared/components/Header";
 
 export interface Tutor {
   confirmed: boolean;
@@ -104,28 +111,6 @@ export interface Courses {
 
 // const currentDate = "2020-11-08"
 const currentDate = format(new Date(), "yyyy-MM-dd");
-const schedulerData = [
-  {
-    startDate: "2018-10-29T09:45",
-    endDate: "2018-10-29T10:45",
-    title: "Иван П. (Python)",
-  },
-  {
-    startDate: "2018-11-01T09:45",
-    endDate: "2018-11-01T11:00",
-    title: "Иван П. (Python)",
-  },
-  {
-    startDate: "2018-11-01T12:00",
-    endDate: "2018-11-01T13:30",
-    title: "Дмитрий М. (Алгоритмы)",
-  },
-  {
-    startDate: "2018-11-01T13:10",
-    endDate: "2018-11-01T13:40",
-    title: "Дмитрий М. (Алгоритмы)",
-  },
-];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -159,16 +144,8 @@ const getCourses = (token: string) => {
 
 const Home = () => {
   const classes = useStyles();
-  const h = useHistory();
-  const { setToken, setUsername, token, username } = useAuth();
+  const { token } = useAuth();
   const [courses, setCourses] = useState<Courses[] | null>(null);
-
-  const logout = (e: any) => {
-    e.preventDefault();
-    setToken("");
-    setUsername("");
-    h.push("/sign-in");
-  };
 
   useEffect(() => {
     if (token) {
@@ -178,19 +155,17 @@ const Home = () => {
     }
   }, [token]);
 
-  console.log(courses);
-
   const schedule: any =
     courses?.length &&
-    courses[0].curriculum?.schedule.map((i) => {
-      return {
-        // startDate: format(new Date(i.datetime_start), "yyyy-MM-ddT23"),
-        // endDate: format(new Date(i.datetime_end), "yyyy-MM-ddT"),
-        startDate: i.datetime_start,
-        endDate: i.datetime_end,
-        title: i.topic,
-      };
-    });
+    courses.flatMap((course) =>
+      course.curriculum?.schedule.map((i) => {
+        return {
+          startDate: i.datetime_start,
+          endDate: i.datetime_end,
+          title: i.topic,
+        };
+      })
+    );
 
   console.log(schedule);
 
@@ -200,19 +175,7 @@ const Home = () => {
 
   return (
     <div>
-      <AppBar position="sticky">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Tutor platform
-          </Typography>
-          <div>
-            <Button color="inherit">{username}</Button>
-            <Button color="secondary" variant="outlined" onClick={logout}>
-              Logout
-            </Button>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <Header />
       <Container>
         <Paper className={classes.paper} elevation={0}>
           {!courses ? (
@@ -223,9 +186,19 @@ const Home = () => {
 
               <Card className={classes.schedule}>
                 <Scheduler data={schedule} height={560}>
-                  <ViewState currentDate={currentDate} />
-                  <WeekView startDayHour={7} endDayHour={22} />
+                  <ViewState defaultCurrentDate={currentDate} />
+                  <MonthView />
+                  <DayView />
+                  <WeekView />
+                  <Toolbar />
+                  <ViewSwitcher />
+
+                  <DateNavigator />
+                  <TodayButton />
                   <Appointments />
+
+                  <AppointmentTooltip showCloseButton showOpenButton />
+                  <AppointmentForm readOnly />
                 </Scheduler>
               </Card>
             </>
