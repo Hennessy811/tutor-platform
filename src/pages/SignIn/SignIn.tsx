@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { BACKEND_URL } from "../../shared/utils/config";
 import { useAuth } from "../../shared/utils/hooks/auth";
+import { Auth } from "../../store/auth/useAuth";
 
 function Copyright() {
   return (
@@ -73,40 +74,20 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn = () => {
   const classes = useStyles();
-  const history = useHistory();
   const location = useLocation();
+  const history = useHistory();
   const [message, setMessage] = useState("");
-  const { setToken, setUsername } = useAuth();
-
-  // console.log(location.search);
+  const auth = Auth.useContainer();
+  console.log(auth);
 
   useEffect(() => {
     if (location.search) {
-      fetch(`${BACKEND_URL}/auth/google/callback${location.search}`)
-        .then((r) => {
-          if (r.status !== 200) {
-            throw new Error(`Couldn't login to Strapi. Status: ${r.status}`);
-          } else {
-            return r;
-          }
-        })
-        .then((res) => res.json())
-        .then((res) => {
-          // Successfully logged with Strapi
-          // Now saving the jwt to use it for future authenticated requests to Strapi
-          setToken(res.jwt);
-          setUsername(res.user.username);
-          setMessage(
-            "You have been successfully logged in. You will be redirected in a few seconds..."
-          );
-          setTimeout(() => history.push("/"), 500); // Redirect to homepage after 3 sec
-        })
-        .catch((err) => {
-          console.log(err);
-          setMessage("An error occurred, please see the developer console.");
-        });
+      auth.login(location.search).then(() => {
+        setMessage("Logged in successfully, redirecting...");
+        setTimeout(() => history.push("/"), 1000);
+      });
     }
-  }, [history, location.search]);
+  }, [location.search]);
 
   return (
     <Grid container component="main" className={classes.root}>

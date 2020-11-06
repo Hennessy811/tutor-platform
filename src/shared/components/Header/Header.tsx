@@ -9,8 +9,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { useAuth } from "../../utils/hooks/auth";
-import styles from "./Header.module.scss";
+import { Auth } from "../../../store/auth/useAuth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,17 +18,18 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 const Header = () => {
   const classes = useStyles();
 
-  const { setToken, setUsername, token, username } = useAuth();
   const h = useHistory();
+  const auth = Auth.useContainer();
 
   const logout = (e: any) => {
-    e.preventDefault();
-    setToken("");
-    setUsername("");
-    h.push("/sign-in");
+    auth.logout();
+    setTimeout(() => {
+      h.push("/sign-in");
+    }, 200);
   };
 
   return (
@@ -39,7 +39,7 @@ const Header = () => {
           Tutor platform
         </Typography>
         <div>
-          <Button color="inherit">{username}</Button>
+          <Button color="inherit">{auth.data?.username}</Button>
           <Button color="secondary" variant="outlined" onClick={logout}>
             Logout
           </Button>

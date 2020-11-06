@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import MenuIcon from "@material-ui/icons/Menu";
-import { ViewState } from "@devexpress/dx-react-scheduler";
+import { EditingState, ViewState } from "@devexpress/dx-react-scheduler";
 import {
   Scheduler,
   DayView,
@@ -35,6 +35,7 @@ import { Redirect, useHistory } from "react-router-dom";
 import { BACKEND_URL } from "../../shared/utils/config";
 import { format } from "date-fns";
 import Header from "../../shared/components/Header";
+import { Auth } from "../../store/auth/useAuth";
 
 export interface Tutor {
   confirmed: boolean;
@@ -133,8 +134,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const getCourses = (token: string) => {
-  return fetch(`${BACKEND_URL}/courses`, {
+const getCourses = (token: string, userId: string) => {
+  return fetch(`${BACKEND_URL}/courses?tutors.id=${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       accept: "application/json",
@@ -144,16 +145,16 @@ const getCourses = (token: string) => {
 
 const Home = () => {
   const classes = useStyles();
-  const { token } = useAuth();
+  const auth = Auth.useContainer();
   const [courses, setCourses] = useState<Courses[] | null>(null);
 
   useEffect(() => {
-    if (token) {
-      getCourses(token).then((r) => {
+    if (auth.token && auth.data) {
+      getCourses(auth.token, auth.data.id).then((r) => {
         setCourses(r);
       });
     }
-  }, [token]);
+  }, [auth]);
 
   const schedule: any =
     courses?.length &&
@@ -167,11 +168,59 @@ const Home = () => {
       })
     );
 
-  console.log(schedule);
-
-  if (!token) {
+  if (!auth.token) {
     return <Redirect to="/sign-in" />;
   }
+
+  const changeAddedAppointment = (addedAppointment: any) => {
+    // this.setState({ addedAppointment });
+    console.log(addedAppointment);
+  };
+
+  const changeAppointmentChanges = (appointmentChanges: any) => {
+    // this.setState({ appointmentChanges });
+    console.log(appointmentChanges);
+  };
+
+  const changeEditingAppointment = (editingAppointment: any) => {
+    // this.setState({ editingAppointment });
+    console.log(editingAppointment);
+  };
+
+  const commitChanges = ({ added, changed, deleted }: any) => {
+    // this.setState((state) => {
+    //   let { data } = state;
+    //   if (added) {
+    //     const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0;
+    //     data = [...data, { id: startingAddedId, ...added }];
+    //   }
+    //   if (changed) {
+    //     data = data.map(appointment => (
+    //       changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+    //   }
+    //   if (deleted !== undefined) {
+    //     data = data.filter(appointment => appointment.id !== deleted);
+    //   }
+    //   return { data };
+    // });
+  };
+
+  const state = {
+    data: schedule,
+    currentDate: "2018-06-27",
+
+    addedAppointment: {},
+    appointmentChanges: {},
+    editingAppointment: undefined,
+  };
+
+  const {
+    currentDate,
+    data,
+    addedAppointment,
+    appointmentChanges,
+    editingAppointment,
+  } = state;
 
   return (
     <div>
@@ -185,8 +234,19 @@ const Home = () => {
               <Typography variant="h4">Кабинет преподавателя</Typography>
 
               <Card className={classes.schedule}>
-                <Scheduler data={schedule} height={560}>
+                <Scheduler data={data} height={560}>
                   <ViewState defaultCurrentDate={currentDate} />
+
+                  <EditingState
+                    onCommitChanges={commitChanges}
+                    addedAppointment={addedAppointment}
+                    onAddedAppointmentChange={changeAddedAppointment}
+                    appointmentChanges={appointmentChanges}
+                    onAppointmentChangesChange={changeAppointmentChanges}
+                    editingAppointment={editingAppointment}
+                    onEditingAppointmentChange={changeEditingAppointment}
+                  />
+
                   <MonthView />
                   <DayView />
                   <WeekView />

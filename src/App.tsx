@@ -10,6 +10,7 @@ import "./App.scss";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import { useAuth } from "./shared/utils/hooks/auth";
+import { Auth } from "./store/auth/useAuth";
 
 function App() {
   const { token } = useAuth();
@@ -18,17 +19,19 @@ function App() {
 
   return (
     <div className="App">
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/sign-in">
-            <SignIn />
-          </Route>
-          <Redirect to="/sign-in" />
-        </Switch>
-      </Router>
+      <Auth.Provider>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route path="/sign-in">
+              <SignIn />
+            </Route>
+            <Redirect to="/sign-in" />
+          </Switch>
+        </Router>
+      </Auth.Provider>
     </div>
   );
 }
