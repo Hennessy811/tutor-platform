@@ -9,18 +9,13 @@ import {
 import "./App.scss";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
-import { useAuth } from "./shared/utils/hooks/auth";
 import { Auth } from "./store/auth/useAuth";
 
 function App() {
-  const { token } = useAuth();
-
-  console.log(token);
-
   return (
     <div className="App">
-      <Auth.Provider>
-        <Router>
+      <Router>
+        <Auth.Provider>
           <Switch>
             <Route exact path="/">
               <Home />
@@ -30,8 +25,8 @@ function App() {
             </Route>
             <Redirect to="/sign-in" />
           </Switch>
-        </Router>
-      </Auth.Provider>
+        </Auth.Provider>
+      </Router>
     </div>
   );
 }
