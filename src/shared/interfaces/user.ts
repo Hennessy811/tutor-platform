@@ -1,22 +1,29 @@
-export interface Role {
-	_id: string;
+export interface Geo {
+	lat: string;
+	lng: string;
+}
+
+export interface Addres {
+	street: string;
+	suite: string;
+	city: string;
+	zipcode: string;
+	geo: Geo;
+}
+
+export interface Company {
 	name: string;
-	description: string;
-	type: string;
-	__v: number;
-	id: string;
+	catchPhrase: string;
+	bs: string;
 }
 
 export interface User {
-	confirmed: boolean;
-	blocked: boolean;
-	_id: string;
+	id: number;
+	name: string;
 	username: string;
 	email: string;
-	provider: string;
-	createdAt: string;
-	updatedAt: string;
-	__v: number;
-	role: Role;
-	id: string;
+	address: Addres;
+	phone: string;
+	website: string;
+	company: Company;
 }
