@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export interface Tutor {
 	confirmed: boolean;
 	blocked: boolean;

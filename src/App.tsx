@@ -1,15 +1,16 @@
-import React from "react";
+import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-} from "react-router-dom";
+} from 'react-router-dom';
 
-import "./App.scss";
-import Home from "./pages/Home";
-import SignIn from "./pages/SignIn";
-import { Auth } from "./store/auth/useAuth";
+import './App.scss';
+import Home from './pages/Home';
+import SignIn from './pages/SignIn';
+import Layout from './shared/components/Layout';
+import Auth from './context/Auth';
 
 function App() {
   return (
@@ -18,7 +19,9 @@ function App() {
         <Auth.Provider>
           <Switch>
             <Route exact path="/">
-              <Home />
+              <Layout>
+                <Home />
+              </Layout>
             </Route>
             <Route path="/sign-in">
               <SignIn />

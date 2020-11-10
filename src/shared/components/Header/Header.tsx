@@ -3,20 +3,19 @@ import {
   Button,
   createStyles,
   makeStyles,
-  Theme,
   Toolbar,
   Typography,
-} from "@material-ui/core";
-import React from "react";
-import { useHistory } from "react-router-dom";
-import { Auth } from "../../../store/auth/useAuth";
+} from '@material-ui/core';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import Auth from '../../../context/Auth';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     title: {
       flexGrow: 1,
     },
-  })
+  }),
 );
 
 const Header = () => {
@@ -25,10 +24,10 @@ const Header = () => {
   const h = useHistory();
   const auth = Auth.useContainer();
 
-  const logout = (e: any) => {
+  const logout = () => {
     auth.logout();
     setTimeout(() => {
-      h.push("/sign-in");
+      h.push('/sign-in');
     }, 200);
   };
 
