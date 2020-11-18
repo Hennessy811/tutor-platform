@@ -1,11 +1,11 @@
-// import { BACKEND_URL } from './config';
+import { BACKEND_URL } from './config';
 
 export const request = (url: string, options?: RequestInit) => {
-  // const token = localStorage.getItem('jwt');
+  const token = localStorage.getItem('jwt');
 
-  return fetch(url, {
+  return fetch(`${BACKEND_URL}/${url}`, {
     headers: {
-      // Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
       accept: 'application/json',
     },

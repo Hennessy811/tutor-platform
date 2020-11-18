@@ -33,7 +33,6 @@
         "no-tabs": 0,
         "react/prop-types": 0,
         "no-use-before-define": 0,
-        "no-unused-vars": "warn",
         "@typescript-eslint/no-use-before-define": [
             2
         ],

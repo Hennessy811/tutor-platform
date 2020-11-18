@@ -7,7 +7,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
-import Config from '../../../context/Config';
+import { useHistory } from 'react-router-dom';
+import Auth from '../../../context/Auth';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -19,7 +20,16 @@ const useStyles = makeStyles(() =>
 
 const Header = () => {
   const classes = useStyles();
-  const { user } = Config.useContainer();
+
+  const h = useHistory();
+  const auth = Auth.useContainer();
+
+  const logout = () => {
+    auth.logout();
+    setTimeout(() => {
+      h.push('/sign-in');
+    }, 200);
+  };
 
   return (
     <AppBar position="sticky">
@@ -28,7 +38,10 @@ const Header = () => {
           Tutor platform
         </Typography>
         <div>
-          <Button color="inherit">{user?.username}</Button>
+          <Button color="inherit">{auth.data?.username}</Button>
+          <Button color="secondary" variant="outlined" onClick={logout}>
+            Logout
+          </Button>
         </div>
       </Toolbar>
     </AppBar>

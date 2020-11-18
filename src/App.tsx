@@ -6,26 +6,29 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-import styles from './App.module.scss';
+import './App.scss';
 import Home from './pages/Home';
+import SignIn from './pages/SignIn';
 import Layout from './shared/components/Layout';
-import Config from './context/Config';
+import Auth from './context/Auth';
 
 function App() {
   return (
-    <div className={styles.app}>
+    <div className="App">
       <Router>
-        <Config.Provider>
+        <Auth.Provider>
           <Switch>
             <Route exact path="/">
               <Layout>
                 <Home />
               </Layout>
             </Route>
-            <Route path="**">404</Route>
+            <Route path="/sign-in">
+              <SignIn />
+            </Route>
             <Redirect to="/sign-in" />
           </Switch>
-        </Config.Provider>
+        </Auth.Provider>
       </Router>
     </div>
   );
