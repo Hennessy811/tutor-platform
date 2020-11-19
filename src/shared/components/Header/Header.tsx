@@ -9,6 +9,7 @@ import {
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Auth from '../../../context/Auth';
+import { version } from '../../../../package.json';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -35,7 +36,7 @@ const Header = () => {
     <AppBar position="sticky">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          <Link to="/">Tutor platform</Link>
+          <Link to="/">Tutor platform (v. {version})</Link>
         </Typography>
         <div>
           <Button color="inherit">{auth.data?.username}</Button>
