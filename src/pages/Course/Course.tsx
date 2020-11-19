@@ -91,17 +91,17 @@ const CoursePage = () => {
   };
 
   const completeness = useMemo(() => {
-    const completedSteps = data?.curriculum.steps.map((i) =>
+    const completedSteps = data?.curriculum?.steps.map((i) =>
       i.completed ? 1 : 0,
     );
     const allSteps = data?.curriculum?.steps?.length || 0;
     return Math.floor((sum(completedSteps) / allSteps) * 100);
-  }, [data?.curriculum.steps]);
+  }, [data?.curriculum?.steps]);
 
   const handleToggleStep = (step: Step) => {
     toggleStep(id, {
       ...data?.curriculum,
-      steps: data?.curriculum.steps.map((i) => {
+      steps: data?.curriculum?.steps.map((i) => {
         if (i.id === step.id)
           return {
             ...i,
@@ -163,7 +163,7 @@ const CoursePage = () => {
           aria-label="Vertical tabs example"
           className={classes.tabs}
         >
-          {data?.curriculum.steps.map((step) => (
+          {data?.curriculum?.steps.map((step) => (
             <Tab
               key={step.id}
               label={step.completed ? `${step.title} - ✅` : step.title}
@@ -171,7 +171,7 @@ const CoursePage = () => {
           ))}
           <Tab label="Добавить этап 📝" />
         </Tabs>
-        {data?.curriculum.steps.map((step, idx) => (
+        {data?.curriculum?.steps.map((step, idx) => (
           <TabPanel
             key={step.id}
             value={activeTab}
@@ -186,7 +186,7 @@ const CoursePage = () => {
         {data && (
           <TabPanel
             value={activeTab}
-            index={data?.curriculum.steps.length}
+            index={data?.curriculum?.steps.length}
             title={newTab.title!}
             completed={false}
             description={newTab.description!}

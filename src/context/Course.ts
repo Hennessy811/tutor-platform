@@ -17,7 +17,7 @@ const useCourse = () => {
         title,
         tutors: [user?.id],
         curriculum: {
-          steps: [],
+          steps: [{ title: 'Начало', description: '', duration: 1 }],
         },
       }),
     });
@@ -39,7 +39,7 @@ const useCourse = () => {
         ...course,
         curriculum: {
           ...course.curriculum,
-          steps: [...course.curriculum.steps, data],
+          steps: [...course.curriculum?.steps, data],
         },
       } as ICourse),
     });

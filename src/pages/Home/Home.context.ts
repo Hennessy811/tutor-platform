@@ -34,7 +34,7 @@ const useHome = () => {
           // eslint-disable-next-line no-underscore-dangle
           tutors: [user?.id],
           curriculum: {
-            steps: [],
+            steps: [{ title: 'Начало', description: '', duration: 1 }],
           },
         }),
       });
