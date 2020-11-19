@@ -118,7 +118,6 @@ const Home = () => {
 
   const coursesList = data?.flatMap((course) => (
     <ListItem
-      disabled={!course.schedule.length}
       key={course.id}
       role={undefined}
       dense

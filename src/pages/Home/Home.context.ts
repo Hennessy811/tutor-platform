@@ -33,6 +33,9 @@ const useHome = () => {
           title: 'Свободное расписание',
           // eslint-disable-next-line no-underscore-dangle
           tutors: [user?.id],
+          curriculum: {
+            steps: [],
+          },
         }),
       });
     }

@@ -16,6 +16,9 @@ const useCourse = () => {
       body: JSON.stringify({
         title,
         tutors: [user?.id],
+        curriculum: {
+          steps: [],
+        },
       }),
     });
   };
